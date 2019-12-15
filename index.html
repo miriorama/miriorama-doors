@@ -1,0 +1,190 @@
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Miriorama Cliffs</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js"></script>
+	<script src="orbit.js"></script>
+	<script src="palettes.js"></script>
+	<script src="RectAreaLightUniformsLib.js"></script>
+	<style>
+		body,
+		html {
+			margin: 0;
+		}
+
+		body {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		div {
+			display: inline-block;
+		}
+
+		canvas {
+			width: 500px;
+			height: 500px	
+		}
+	</style>
+</head>
+
+<body>
+	<div id="container"></div>
+	<script>
+		var container;
+		var camera, scene, renderer, controls;
+		let width = 500;
+		let height = 500;
+
+		let palette = random(0, palettes.length - 1);
+		let colors = [palettes[palette][0], palettes[palette][1]];
+
+		init();
+		draw();
+		animate();
+
+		THREE.RectAreaLightUniformsLib.init();
+
+
+		function init() {
+			renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setPixelRatio(window.devicePixelRatio);
+			renderer.setSize(width, height);
+
+			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+			container = document.createElement('div');
+			document.body.appendChild(container);
+			container.appendChild(renderer.domElement);
+
+			scene = new THREE.Scene();
+			scene.background = new THREE.Color('#000');
+			//scene.fog = new THREE.FogExp2( 0xefd1b5, 0.00001 );
+
+			camera = new THREE.OrthographicCamera(-20, 20, 20, -20, 0.1, 2000);
+			camera.position.set(0, 1, 100);
+			camera.lookAt(0,0,0);
+			
+			scene.add(camera);
+
+			var light = new THREE.AmbientLight('#fff', 1);
+			scene.add(light);
+
+			
+
+			//var light = new THREE.PointLight('#f00', 0.5);
+			//light.castShadow = true;
+			//light.position.set(-1,0,5);
+			//light.decay = 2;
+			//scene.add(light);
+//
+			//var light = new THREE.PointLight('#00f', 1);
+			////light.castShadow = true;
+			//light.position.set(10,0,5);
+			//light.decay = 2;
+			//scene.add(light);
+
+
+
+			//var axesHelper = new THREE.AxesHelper(10);
+			//scene.add(axesHelper);
+
+			//controls = new THREE.OrbitControls(camera, renderer.domElement);
+			//controls.update();
+		}
+
+		function random(min, max) {
+			return THREE.Math.randInt(min, max)
+		}
+
+		function draw() {
+			var geometry = new THREE.BoxGeometry( 50, 50, 1 );
+			var material = new THREE.MeshBasicMaterial( {color: colors[0]} );
+			var cube = new THREE.Mesh( geometry, material );
+			cube.position.set(24.9, 0, 1);
+			cube.castShadow = true;
+			cube.receiveShadow = true;
+			scene.add( cube );
+
+			var geometry = new THREE.BoxGeometry( 50, 50, 1 );
+			var material = new THREE.MeshStandardMaterial( {color: colors[0]} );
+			var cube = new THREE.Mesh( geometry, material );
+			cube.position.set(-25, 0, 0);
+			cube.castShadow = true;
+			cube.receiveShadow = true;
+			scene.add( cube );
+
+			var width = 20;
+			var height = 20;
+			var intensity = 2;
+			var rectLight = new THREE.RectAreaLight( '#fff', intensity,  width, height );
+			rectLight.position.set( 0, 0, 0 );
+			rectLight.rotation.set(-Math.PI / 2, +Math.PI / 2, 0);
+			//rectLight.lookAt( 0, 0, 0 );
+			scene.add( rectLight )
+
+			scene.rotation.z = Math.PI / 2
+
+			//var width = 50;
+			//var height = 50;
+			//var intensity = 2;
+			//var rectLight = new THREE.RectAreaLight( '#fff', intensity,  width, height );
+			//rectLight.position.set( 25, 0, 1 );
+			//rectLight.rotation.set(0 , 0, 0);
+			////rectLight.lookAt( 0, 0, 0 );
+			//scene.add( rectLight )
+
+			//rectLightHelper = new THREE.RectAreaLightHelper( rectLight );
+			//rectLight.add( rectLightHelper );
+
+			//var geometry = new THREE.BoxGeometry( 25, 1, 23 );
+			//var material = new THREE.MeshStandardMaterial( {color: '#f3f3f3'} );
+			//var cube = new THREE.Mesh( geometry, material );
+			//cube.position.set(12, 24, 0);
+			//cube.castShadow = true;
+			//cube.receiveShadow = true;
+			//scene.add( cube );
+//
+			//var geometry = new THREE.BoxGeometry( 0.001, 23, 23 );
+			//var material = new THREE.MeshStandardMaterial( {color: '#f3f3f3'} );
+			//var cube = new THREE.Mesh( geometry, material );
+			//cube.position.set(0, -13, 0);
+			//cube.castShadow = true;
+			//cube.receiveShadow = true;
+			//scene.add( cube );
+//
+			//var geometry = new THREE.BoxGeometry( 0.001, 23, 23 );
+			//var material = new THREE.MeshStandardMaterial( {color: '#f3f3f3'} );
+			//var cube = new THREE.Mesh( geometry, material );
+			//cube.position.set(0, 13, 0);
+			//cube.castShadow = true;
+			//cube.receiveShadow = true;	
+			//scene.add( cube );
+//
+			//var geometry = new THREE.BoxGeometry( 1, 50, 23 );
+			//var material = new THREE.MeshStandardMaterial( {color: '#f3f3f3'} );
+			//var cube = new THREE.Mesh( geometry, material );
+			//cube.position.set(-13, 0, 0);
+			//cube.castShadow = true;
+			//cube.receiveShadow = true;	
+			//scene.add( cube );
+		}
+		
+		function render() {
+			renderer.render(scene, camera);
+		}
+
+		
+
+		function animate() {
+			requestAnimationFrame(animate);
+			//controls.update();
+			render();
+		}
+	</script>
+</body>
+</html>
